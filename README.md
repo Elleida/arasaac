@@ -1,4 +1,4 @@
-**conjugarfrase2.py** 
+**conjugarfrase2.py** <br>
 script de python que permite conjugar verbos y ajustar la concordancia de genero y número de la frase.
 **nombresfemeninos.csv**
 fichero con el listado de nombres femeninos utilizados para detectar el género (sacado de la web del ine)
