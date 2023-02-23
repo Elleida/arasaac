@@ -1,3 +1,5 @@
+**conjugarfrase.py** <br>
+script de python que permite conjugar verbos. 
 **conjugarfrase2.py** <br>
 script de python que permite conjugar verbos y ajustar la concordancia de genero y número de la frase. <br>
 **nombresfemeninos.csv** <br>
@@ -7,3 +9,8 @@ fichero con el listado de nombres masculinos utilizados para detectar el género
 **es_verbs.txt** <br>
 este fichero pertenece al paquete pattern. Se ha modificado con la conjugación de algunos verbos irregulares. <br>
 Tiene que sustituir al existente en el directorio pythonX.X\site-packages\pattern\text\es <br>
+<br>
+**Requerimientos** <br>
+flask <br>
+pattern2.6 <br>
+freeling 4.2 <br>
