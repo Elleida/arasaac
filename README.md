@@ -1,5 +1,5 @@
 **conjugarfrase.py** <br>
-script de python que permite conjugar verbos. 
+script de python que permite solo conjugar verbos. <br>
 **conjugarfrase2.py** <br>
 script de python que permite conjugar verbos y ajustar la concordancia de genero y número de la frase. <br>
 **nombresfemeninos.csv** <br>
