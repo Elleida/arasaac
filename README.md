@@ -2,6 +2,10 @@
 script de python que permite solo conjugar verbos. <br>
 **conjugarfrase2.py** <br>
 script de python que permite conjugar verbos y ajustar la concordancia de genero y número de la frase. <br>
+**conjugarfrase3.py** <br>
+script de python que permite conjugar verbos y ajustar la concordancia de genero y número de la frase. <br>
+Versión 20230306 <br>
+Esta versión soluciona algunos problemas encontrado sen conjugarfrase2.py <br>
 **nombresfemeninos.csv** <br>
 fichero con el listado de nombres femeninos utilizados para detectar el género (sacado de la web del ine) <br>
 **nombresmasculinos.csv** <br>
