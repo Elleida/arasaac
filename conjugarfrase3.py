@@ -794,6 +794,8 @@ def flexionafrase(texto,debug=False):
     else:
         textlem = txt[0]
         tiempo = ''
+    if textlem.isupper():
+        textlem=textlem.lower()
     textlem=textlem.replace(' del ',' de el ')
     textlem=textlem.replace(' al ', ' a el ')
 #    comas=findOccurrences(textlem, ',')
