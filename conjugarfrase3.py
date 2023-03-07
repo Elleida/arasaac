@@ -917,7 +917,7 @@ def flexionafrase(texto,debug=False):
 # verbo +que + subjuntivo
 
             if not nextverbsubj:
-                if data[posv][1] in verbossubjuntivos and data[posv+1][1]=='que':
+                if posv+1<=pf and data[posv][1] in verbossubjuntivos and data[posv+1][1]=='que':
                      nextverbsubj=True
 
 # comprobamos si la oración anterior termina en "para" y la siguiente empieza por "que". En estos casos el verbo de la oración siguiente
