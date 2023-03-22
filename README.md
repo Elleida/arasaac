@@ -10,6 +10,8 @@ Esta versión soluciona algunos problemas encontrado sen conjugarfrase2.py <br>
 script de python que permite conjugar verbos y ajustar la concordancia a los sustantivos <br>
 **conjugarfrasev2.py** <br>
 mejoras sobre la versión v1 con el tratamiento de gerundios <br>
+**conjugarfrasev3.py** <br>
+mejoras sobre la versión v2 con el tratamiento de verbos conjugados, quita el punto final y devuelve todo en mayúsculas si la entrada estaba toda en mayúsculas <br>
 **nombresfemeninos.csv** <br>
 fichero con el listado de nombres femeninos utilizados para detectar el género (sacado de la web del ine) <br>
 **nombresmasculinos.csv** <br>
