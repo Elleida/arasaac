@@ -12,6 +12,11 @@ script de python que permite conjugar verbos y ajustar la concordancia a los sus
 mejoras sobre la versión v1 con el tratamiento de gerundios <br>
 **conjugarfrasev3.py** <br>
 mejoras sobre la versión v2 con el tratamiento de verbos conjugados, quita el punto final y devuelve todo en mayúsculas si la entrada estaba toda en mayúsculas <br>
+**conjugarfrasev4.py** <br>
+mejoras sobre la versión v3 con la inclusión de frases hechas y la conjugación de frases interrogativas tipo  <br>
+QUIÉN + VERBO <br>
+QUIÉNES + VERBO <br>
+QUÉ/DÓNDE/CÓMO/CUÁNTOS/POR QUÉ + VERBO + PRONOMBRE <br>
 **nombresfemeninos.csv** <br>
 fichero con el listado de nombres femeninos utilizados para detectar el género (sacado de la web del ine) <br>
 **nombresmasculinos.csv** <br>
