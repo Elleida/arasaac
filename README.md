@@ -19,6 +19,8 @@ QUIÉNES + VERBO <br>
 QUÉ/DÓNDE/CÓMO/CUÁNTOS/POR QUÉ + VERBO + PRONOMBRE <br>
 **conjugarfrasev5.py** <br>
 mejoras sobre la versión v4. El analizador morfológico ha sido entrenado con escritura normal (mayúsculas y minúsculas). Ahora todas las palabras se pasan a minúsuculas lo que provoca ciertos errores con verbos conjugados y nombres propios que se etiquetan como verbos. Esta versión intenta resolver este problema.  <br>
+**conjugarfrasev6.py** <br>
+mejoras sobre la versión v5. No conjuga verbos después de querer, p.p 'yo quiero correr' y no pone punto al final de la frase  <br>
 **nombresfemeninos.csv** <br>
 fichero con el listado de nombres femeninos utilizados para detectar el género (sacado de la web del ine) <br>
 **nombresmasculinos.csv** <br>
