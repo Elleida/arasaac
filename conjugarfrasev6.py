@@ -234,7 +234,7 @@ def get_verbo(data,pi,p):
 #  con verbos copulativos
             if any(x in item[1] for x in verboscopulativos):
                 return item[1],pos#-fp
-    if nv>0:
+    if nv>0 or vc>0:
         return ritem[1],posv
     return '',-1
 
