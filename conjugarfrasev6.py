@@ -2,7 +2,7 @@
 from flask import Flask, request 
 import pyfreeling
 
-from pattern.es import conjugate,PRETERITE, PRESENT, FUTURE, IMPERFECT, SG, PL, PROGRESSIVE, INDICATIVE, SUBJUNCTIVE
+from pattern.es import conjugate,PRETERITE, PRESENT, FUTURE, IMPERFECT, SG, PL, PROGRESSIVE, INDICATIVE, SUBJUNCTIVE, PARTICIPLE, PAST
 from pattern.es import MALE, FEMALE, NEUTRAL, PLURAL , FEMININE, MASCULINE, SINGULAR
 
 
@@ -47,7 +47,9 @@ verbos3p=["llover",'nevar', 'granizar', 'nublar', 'oscurecer', 'diluviar', 'llov
 
 verboscopulativos=['ser','estar','parecer']
 
-verbosconjugados=['querer']
+verbosconjugados=['querer','gustar','asustar']
+
+verboauxiliar=['haber']
 
 verbosgerundios=['estar','ir','seguir','llevar','andar','venir','continuar']
 
@@ -275,7 +277,7 @@ def get_sujeto(data,pi,p,debug=False):
     nums='N'
     for pos,item in enumerate(data):
         if pos >= pi and pos <= p:
-            if ('CC' in item[2][0:2]):
+            if ('CC' in item[2][0:2]) and pos>pi:
                 nc=nc+1
             if 'D' in item[2][0]:
                 nd=item[2][4]
@@ -1066,6 +1068,7 @@ def flexionafrase(texto,debug=False):
     texto=texto.strip()
 # check if we have to inflect the text
     conjugar=True
+    auxiliar=False
     txttmp= [s for s in texto.lower() if s.isalpha() or s.isspace()]
     txttmp=''.join(txttmp)
     for item in fraseshechas:
@@ -1088,6 +1091,8 @@ def flexionafrase(texto,debug=False):
     if len(txt)>1:
         textlem = txt[1]
         tiempo=''
+        if txt[0][1:]=='P':
+            tiempo = PRESENT
         if txt[0][1:]=='PP':
             tiempo = PRETERITE
         if txt[0][1:]=='PI':    
@@ -1238,6 +1243,18 @@ def flexionafrase(texto,debug=False):
 #   At this moment there is only the present of the subjunctive (improve in the future with the past) 
                     if mood==SUBJUNCTIVE: 
                         tiempo=PRESENT
+#   At this moment there is only the present of the subjunctive (improve in the future with the past) 
+                    if mood==SUBJUNCTIVE: 
+                        tiempo=PRESENT
+#  We check if the verb is in the list of verbs that doesn't require a conjugation
+                    if any(x in data[posv][1] for x in verbosconjugados) and data[posv][0] != data[posv][1]:
+                        conjugar=False
+#  We check if the verb is the auxiliary verb "haber" and the next item is a verb, then we conjugate the verb haber and the next verb with the participle
+#  If the main verb is given in participle, we asume that the mophological analysis is incorrect and it is a sustantive or adjective, so it is not a past perfect compound
+                    if any(x in data[posv][0] for x in verboauxiliar)  and data[posv+1][2][0]=='V' and data[posv+1][2][2]!='P':
+                        data[posv+1][0]=conjugate(data[posv+1][0],PAST+PARTICIPLE) 
+                        auxiliar=True       
+
 #   for some reason the first call to "conjugate" gives an error, but the second time it works
                     try:
                         if conjugar:
@@ -1249,6 +1266,10 @@ def flexionafrase(texto,debug=False):
                             verboconjugado=conjugate(verbo,tiempo,penum[0],penum[1],mood=mood)
                         else:
                             verboconjugado=data[posv][0]
+                    if auxiliar and len(verboconjugado.split("/"))>1:
+                        verboconjugado=verboconjugado.split("/")[1]
+                    else:
+                        verboconjugado=verboconjugado.split("/")[0]
                     data[posv][0]=verboconjugado
 #   if the previous segment was in subjunctive mood and the next segment has a copulative conjunction, we have follow in subjunctive mood
                     if nextverbsubj and n<nfrases-1 and data[pf+1][2]!='CC':
@@ -1307,4 +1328,4 @@ def frase():
 
 # run the app
 if __name__ == '__main__':
-    app.run(port=8506,host='0.0.0.0')
+    app.run(port=8508,host='0.0.0.0')
