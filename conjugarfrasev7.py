@@ -195,6 +195,7 @@ def lematiza(tk,sp,mf,tagger,texto):
             tag='P'+item[2][1:]
             dataout.append([item[0],item[1],tag])
         elif 'DA' in item[2][0:2]  and 'V' in data[pos-1][2][0:1]:
+            tag=item[2]
             if item[0]=='lo':
                 tag='PP3MSA0'
                 item[1]=item[0]
@@ -416,6 +417,7 @@ def get_numerofrases(data):
     p=[]
     comma=False
     fs=False
+    pos=0
 
     for pos,item in enumerate(data):
         if 'CS' in item[2][0:2] and pos>0:
@@ -469,7 +471,6 @@ def nombre_compuesto(data,p):
     posv=p
     for pos,item in enumerate(data):
         if pos < p:
-            st.write(pos,p,item[1])
             posv=posv+item[1].count('_')
     return posv
 
