@@ -1088,7 +1088,7 @@ def corregirverbocomer(texto,data):
     return data
 
 
-def flexionafrase(texto,debug=False):
+def flexionafrase(texto,fout,debug=False):
 # remove blank spaces at the beginning and end of the text
     texto=texto.strip()
 # check if we have to inflect the text
@@ -1155,6 +1155,9 @@ def flexionafrase(texto,debug=False):
 
 #   First we lemmatize.
         ls,lema,data=lematiza(tk,sp,mf,tagger,textlem)
+        fout.write('Lematización:\n')
+        for pos,item in enumerate(data):
+            fout.write(item[0]+'\t'+item[1]+'\t'+item[2]+'\n')
 #   exceptions: yo como ayer ... como is tagged as a CS instead of a VM (verb)
         data=corregirverbocomer(textlem,data)
 #   We check if the firs word in a proper name as some times the lemmatizer does not recognize it
@@ -1236,6 +1239,7 @@ def flexionafrase(texto,debug=False):
                     if debug:
                         print('Entrando a get_sujeto',pi,posv)
                     penum,pos=get_sujeto(data,pi,posv,debug)
+            fout.write('Sujeto: Tiempo '+str(penum[0])+' Número '+penum[1]+'\n')    
 #   By default the mood is indicative, but if it is a the previous verb require a subjunctive mood for the next verb, we change the mood
             if nextverbsubj:
                 mood=SUBJUNCTIVE
@@ -1281,7 +1285,7 @@ def flexionafrase(texto,debug=False):
                     if any(x in data[posv][0] for x in verboauxiliar)  and data[posv+1][2][0]=='V' and data[posv+1][2][2]!='P':
                         data[posv+1][0]=conjugate(data[posv+1][0],PAST+PARTICIPLE) 
                         auxiliar=True       
-
+                    fout.write('Verbo: '+verbo+' Tiempo '+tiempo+' Persona '+str(penum[0])+' Número '+penum[1]+'\n')
 #   for some reason the first call to "conjugate" gives an error, but the second time it works
                     try:
                         if conjugar:
@@ -1344,7 +1348,7 @@ def frase():
     if len(txt)==1 and txt[0].isupper():
         texto=txt[0].lower()
         mayusculas=True
-    textconj=flexionafrase(texto)
+    textconj=flexionafrase(texto,fout)
     if mayusculas:
         textconj=textconj.upper()
     if len(text)>0:
