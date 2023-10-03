@@ -240,7 +240,7 @@ def get_verbo(data,pi,p):
         if pos >= pi and pos <=p:
 #            if item[2][0]=='F':
 #                fp=fp+1
-            if any(x in item[1] for x in verbosconjugados):
+            if any(x == item[1] for x in verbosconjugados):
                 posv=pos
                 vc=1
                 ritem=item
@@ -255,7 +255,7 @@ def get_verbo(data,pi,p):
                     return item[1],pos#-fp
 #  a veces el verbo no está marcado como tal, por ejemplo en oraciones 
 #  con verbos copulativos
-            if any(x in item[1] for x in verboscopulativos):
+            if any(x == item[1] for x in verboscopulativos):
                 return item[1],pos#-fp
     if nv>0 or vc>0:
         return ritem[1],posv
@@ -286,7 +286,7 @@ def get_sujetointerrogativa(data,pi,pf):
             out[1]=PL
     return out,pos0
 
-def get_sujeto(data,pi,p,debug=False):
+def get_sujeto(data,pi,p,fout):
     out=[1,SG]
     pos0=-1
     pout=-1
@@ -335,8 +335,7 @@ def get_sujeto(data,pi,p,debug=False):
                 pos0=pos       
             if 'SP' in item[2][0:2] and (ns>0 or np>0):
                 return out,pos0
-    if debug:
-        print('sujeto ',np,ns,nc,out,pos0)
+    fout.write('funcion sujeto: pi '+str(pi) + ' p '+str(p)+' np '+ str(np) +' ns '+str(ns) + ' nc '+ str(nc) + ' out '+str(out) + ' pos0 ' +str(pos0)+'\n')
     if pout>pos0:
         pos0=pout
     if (ns>1)and(nc>0):
@@ -349,8 +348,7 @@ def get_sujeto(data,pi,p,debug=False):
         out[1]=PL
         if nd=='S':
             out[1]=SG
-    if debug:
-        print('sujeto return',out,pos0)
+
     return out,pos0
 
 def get_numerofrases(data):
@@ -1107,7 +1105,6 @@ def flexionafrase(texto,fout,debug=False):
                 break
 
 #            return texto, texto
-
 # insert a dot at the end of the text if it does not have one
     if len(texto)>0 and '.' not in texto[-1]:
         texto=texto+'.'
@@ -1150,6 +1147,7 @@ def flexionafrase(texto,fout,debug=False):
     listanombresm,listanombresf=leer_nombres()
     mood=INDICATIVE
     tipofrase='ENU'
+    noverbo=0
     if len(textlem)>1:
 
 
@@ -1201,6 +1199,7 @@ def flexionafrase(texto,fout,debug=False):
             data=cambia_verbo_gerundio(data,pi,pf,debug)
 #   We search for the verb and the position in the segment            
             verbo,posv=get_verbo(data,pi,pf)
+            fout.write('Salida verbo:' + verbo + ' '+ str(posv)+'\n')
 #   We search for the prepositions "SP" before and after the verb
 #   The gender and number concordance is fixed by the name
 
@@ -1238,8 +1237,8 @@ def flexionafrase(texto,fout,debug=False):
                 if tipofrase=='ENU':
                     if debug:
                         print('Entrando a get_sujeto',pi,posv)
-                    penum,pos=get_sujeto(data,pi,posv,debug)
-            fout.write('Sujeto: Tiempo '+str(penum[0])+' Número '+penum[1]+'\n')    
+                    penum,pos=get_sujeto(data,pi,posv,fout)
+            fout.write('Sujeto: '+ tipofrase + ' Tiempo '+str(penum[0])+' Número '+penum[1]+' pos '+ str(pos)+'\n')    
 #   By default the mood is indicative, but if it is a the previous verb require a subjunctive mood for the next verb, we change the mood
             if nextverbsubj:
                 mood=SUBJUNCTIVE
@@ -1307,17 +1306,23 @@ def flexionafrase(texto,fout,debug=False):
                         nextverbsubj=False
 #   Check if verb requires subjunctive mood in the next segment
 #   verb + que + subjuntive
-            if not nextverbsubj:
-                if posv+1<=pf and data[posv][1] in verbossubjuntivos and data[posv+1][1]=='que':
-                    nextverbsubj=True
+                if not nextverbsubj:
+                    if posv+1<=pf and data[posv][1] in verbossubjuntivos and data[posv+1][1]=='que':
+                        nextverbsubj=True
+            else:
+                noverbo=1
+
 #   Test if the previous segment ends in "para" and the next segment starts with "que". In this case the verb of the next segment is in subjunctive mood
             if es_oracionfinal(data,pf,posv,debug):
                 nextverbsubj=True
 
         if len(data)>0:
-            textconj=' '.join(x[0] for x in data)   
-            textconj=textconj.replace(' ,',',').replace(' .','.')
-            textconj=textconj[0:-1]
+            if noverbo==1:
+                textconj=textlem
+            else:
+                textconj=' '.join(x[0] for x in data)   
+                textconj=textconj.replace(' ,',',').replace(' .','.')
+                textconj=textconj[0:-1]
             if replacedel:
                 textconj=textconj.replace(' de el ', ' del ')
             if replaceael:
@@ -1348,7 +1353,11 @@ def frase():
     if len(txt)==1 and txt[0].isupper():
         texto=txt[0].lower()
         mayusculas=True
-    textconj=flexionafrase(texto,fout)
+# if there is more than one word in the sentence, then we try to inflect it
+    if len(texto.split())>1:
+        textconj=flexionafrase(texto,fout)
+    else:
+        textconj=texto
     if mayusculas:
         textconj=textconj.upper()
     if len(text)>0:
