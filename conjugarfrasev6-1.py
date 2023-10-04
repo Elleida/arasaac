@@ -317,7 +317,9 @@ def get_sujeto(data,pi,p,fout):
                         pos0=pos   
                 nums=item[2][3]        
             if 'PP' in item[2][0:2] or 'PI' in item[2][0:2]:
+                fout.write('Pronombre: '+item[1]+' pout '+str(pout)+'\n')
                 pro=pronombres[item[1]]
+                fout.write('Pronombre: '+str(pro)+'\n')
                 if pout>-1:
                     if pro[0]==1:
                         out=pro
@@ -326,7 +328,8 @@ def get_sujeto(data,pi,p,fout):
                 else:
                     out=pro
                 pout=pos
-                np=np+1      
+                np=np+1     
+                fout.write('Salimos de pronombres: '+str(out)+' np '+str(np)+ ' pout '+str(pout)+'\n') 
             if 'Z' in item[2][0]:
                 if item[1]!='1':
                     out=[3,PL]
