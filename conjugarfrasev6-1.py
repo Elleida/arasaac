@@ -320,6 +320,9 @@ def get_sujeto(data,pi,p,fout):
                 fout.write('Pronombre: '+item[1]+' pout '+str(pout)+'\n')
                 pro=pronombres[item[1]]
                 fout.write('Pronombre: '+str(pro)+'\n')
+                for k, v in pronombres.items():
+                    fout.write('.......: '+k+' '+str(v)+'\n')
+                
                 if pout>-1:
                     if pro[0]==1:
                         out=pro
