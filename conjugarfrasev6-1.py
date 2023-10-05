@@ -14,26 +14,6 @@ def normalize(vowel):
 def quitar_tildes(palabra):
     return "".join([normalize(vowel) for vowel in palabra])
 
-pronombres = {
-        "yo": [1, SG],
-        "tú": [2, SG],
-        "él": [3, SG],
-        "ella": [3, SG],
-        "usted": [3, SG],
-        "nosotros": [1, PL],
-        "vosotros": [2, PL],
-        "ellos": [3, PL],
-        "ellas": [3, PL],
-        "ustedes": [3, PL],
-        "todo": [3, PL],
-        "me": [1, SG],
-        "te": [2, SG],
-        "lo": [3, SG],
-        "le": [3, SG],
-        "nos": [1, PL],
-        "os": [2, PL],
-        "les": [3, PL]
-    }
 
 presente=["hoy","actualmente","ahora","ya"]
 
@@ -80,6 +60,29 @@ fraseshechas=['cómo estás','es una tontería','lo siento','me gusta','no me gu
 fraseshechascontinua=['para qué sirve','sirve para']
 
 palabrasexcepciones=['dios']
+
+def get_personaynumeropronombre(pro):
+    pronombres = {  
+        "yo": [1, SG],
+        "tú": [2, SG],
+        "él": [3, SG],
+        "ella": [3, SG],
+        "usted": [3, SG],
+        "nosotros": [1, PL],
+        "vosotros": [2, PL],
+        "ellos": [3, PL],
+        "ellas": [3, PL],
+        "ustedes": [3, PL],
+        "todo": [3, PL],
+        "me": [1, SG],
+        "te": [2, SG],
+        "lo": [3, SG],
+        "le": [3, SG],
+        "nos": [1, PL],
+        "os": [2, PL],
+        "les": [3, PL]
+    }
+    return pronombres[pro]
 
 def Analizador():
 
@@ -190,7 +193,7 @@ def get_pronombre(data,pi,p):
     for pos,item in enumerate(data):
         if pos >= pi and pos <= p:
             if 'PP' in item[2]: 
-                pro=pronombres[item[1]]
+                pro=get_personaynumeropronombre(item[1])
                 if pout>-1:
                     if pro[0]==1:
                         out=pro
@@ -318,7 +321,7 @@ def get_sujeto(data,pi,p,fout):
                 nums=item[2][3]        
             if 'PP' in item[2][0:2] or 'PI' in item[2][0:2]:
                 fout.write('Pronombre: '+item[1]+' pout '+str(pout)+'\n')
-                pro=pronombres[item[1]]
+                pro=get_personaynumeropronombre(item[1])
                 fout.write('Pronombre: '+str(pro)+'\n')
                 if pout>-1:
                     if pro[0]==1:
@@ -1127,7 +1130,7 @@ def flexionafrase(texto,fout,debug=False):
     else:
         textlem = txt[0]
         tiempo = ''
-    textlem=textlem.lower()
+    textlem=' '+textlem.lower()
 # the lematizer splits some words in two, so we have to join them at the end
     if " del " in textlem:
         replacedel=True
@@ -1153,35 +1156,28 @@ def flexionafrase(texto,fout,debug=False):
     noverbo=0
     if len(textlem)>1:
 
-        for k, v in pronombres.items():
-            fout.write('1.......: '+k+' '+str(v)+'\n')
 #   First we lemmatize.
         ls,lema,data=lematiza(tk,sp,mf,tagger,textlem)
         fout.write('Lematización:\n')
         for pos,item in enumerate(data):
             fout.write(item[0]+'\t'+item[1]+'\t'+item[2]+'\n')
-        for k, v in pronombres.items():
-            fout.write('2.......: '+k+' '+str(v)+'\n')            
+          
 #   exceptions: yo como ayer ... como is tagged as a CS instead of a VM (verb)
         data=corregirverbocomer(textlem,data)
-        for k, v in pronombres.items():
-            fout.write('3.......: '+k+' '+str(v)+'\n')
+
 #   We check if the firs word in a proper name as some times the lemmatizer does not recognize it
         data=buscanombrespropios(data,listanombresm,listanombresf,0,len(textlem))#0)
 #   We search for the number of segments in the input text
 #   A segment is a group of words that can be a subject, a verb, an object, etc. and it can be separated by a comma or a conjunction
 #   The conjuncion is asigned to the next segment
-        for k, v in pronombres.items():
-            fout.write('4.......: '+k+' '+str(v)+'\n')
+
         p,nfrases=get_numerofrases(data)
-        for k, v in pronombres.items():
-            fout.write('5.......: '+k+' '+str(v)+'\n')
+
         nadv=0
 #   If there are more than one segment, we count the number of adverbs of time. We will use this information to decide the time of the verb
         if nfrases>1:
             nadv=get_numeroadverbiostiempo(textlem.lower())
-            for k, v in pronombres.items():
-                fout.write('6.......: '+k+' '+str(v)+'\n')
+
         nextverbsubj=False
 #   process each segment
         for n in range(0, nfrases):
@@ -1193,8 +1189,7 @@ def flexionafrase(texto,fout,debug=False):
 
 #   Check if there are proper names in the segment
             data=buscanombrespropios(data,listanombresm,listanombresf,pi,pf)
-            for k, v in pronombres.items():
-                fout.write('7.......: '+k+' '+str(v)+'\n')
+
 #   Sometimes the segmentator leave the conjuncion in the previous segment, so we have to check if the first word is a conjuncion
             if n>0:
                 poscs=get_conjuncionsubordinante(data,pi-1,pf-1)
@@ -1205,24 +1200,20 @@ def flexionafrase(texto,fout,debug=False):
                     tiempo=PRESENT
                     nextverbsubj=True
 # esto hay que mejorarlo, buscar los adverbios de tiempo en cada segmento
-            for k, v in pronombres.items():
-                fout.write('8.......: '+k+' '+str(v)+'\n')
+
             if len(tiempo)==0:
                 tiempo=get_tiempo(data,0,pf)
             if nadv>1:
                 tiempo=get_tiempo(data,pi,pf)
-            for k, v in pronombres.items():
-                fout.write('9.......: '+k+' '+str(v)+'\n')
+
 #   Detect if there are two verbs in the segment and one of then belongs to the list of gerund verbs.
 #   If so, we change the second verb by the gerund
             data=cambia_verbo_gerundio(data,pi,pf,debug)
-            for k, v in pronombres.items():
-                fout.write('10.......: '+k+' '+str(v)+'\n')
+
 #   We search for the verb and the position in the segment            
             verbo,posv=get_verbo(data,pi,pf)
             fout.write('Salida verbo:' + verbo + ' '+ str(posv)+'\n')
-            for k, v in pronombres.items():
-                fout.write('11.......: '+k+' '+str(v)+'\n')
+
 #   We search for the prepositions "SP" before and after the verb
 #   The gender and number concordance is fixed by the name
 
@@ -1230,8 +1221,7 @@ def flexionafrase(texto,fout,debug=False):
             posps=get_preposicion(data,pi,posv)
 #   After the verb
             pospc=get_preposicion(data,posv+1,pf)
-            for k, v in pronombres.items():
-                fout.write('12.......: '+k+' '+str(v)+'\n')
+
 #            if debug:
 #                st.write('Preposiciones después del verbo:',posps,pospc)
 #            npospc=len(pospc)
@@ -1263,8 +1253,7 @@ def flexionafrase(texto,fout,debug=False):
                         print('Entrando a get_sujeto',pi,posv)
                     penum,pos=get_sujeto(data,pi,posv,fout)
             fout.write('Sujeto: '+ tipofrase + ' Tiempo '+str(penum[0])+' Número '+penum[1]+' pos '+ str(pos)+'\n')    
-            for k, v in pronombres.items():
-                fout.write('13.......: '+k+' '+str(v)+'\n')
+
 #   By default the mood is indicative, but if it is a the previous verb require a subjunctive mood for the next verb, we change the mood
             if nextverbsubj:
                 mood=SUBJUNCTIVE
@@ -1335,8 +1324,7 @@ def flexionafrase(texto,fout,debug=False):
                 if not nextverbsubj:
                     if posv+1<=pf and data[posv][1] in verbossubjuntivos and data[posv+1][1]=='que':
                         nextverbsubj=True
-                for k, v in pronombres.items():
-                    fout.write('14.......: '+k+' '+str(v)+'\n')
+
             else:
                 noverbo=1
 
@@ -1351,11 +1339,14 @@ def flexionafrase(texto,fout,debug=False):
                 textconj=' '.join(x[0] for x in data)   
                 textconj=textconj.replace(' ,',',').replace(' .','.')
                 textconj=textconj[0:-1]
+            textconj=' '+textconj
             if replacedel:
                 textconj=textconj.replace(' de el ', ' del ')
             if replaceael:
                 textconj=textconj.replace(' a el ', ' al ')
-
+            textconj=textconj.strip()
+    else:
+        textconj=textlem
     return textconj
 
 # ................................................................
