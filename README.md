@@ -23,9 +23,9 @@ mejoras sobre la versión v4. El analizador morfológico ha sido entrenado con e
 mejoras sobre la versión v5. No conjuga verbos después de querer, p.p 'yo quiero correr' y no pone punto al final de la frase  <br>
 **conjugarfrasev7.py** <br>
 mejoras sobre la versión v6. Se solucionan ciertos errores del lematizador, p.e. "dios ser grande", la palabra "dios" la etiqueta como interjección. Ahora si no va con los símbolos le asigna nombre propio. También se ha solucionado oraciones reflexivas afirmativas y negativas " yo saber lo" 
- se flexiona "yo lo sé" o "yo no saber lo" se flexiona "yo no lo sé"
+ se flexiona "yo lo sé" o "yo no saber lo" se flexiona "yo no lo sé" <br>
 **conjugarfrasev7-1.py** <br>
-mejoras sobre la versión v7. Se solucionan problemas de concordancia en frases son ser/estar/parecer y genero/número palabras terminadas en or ("profesor", "conductor",...) 
+mejoras sobre la versión v7. Se solucionan problemas de concordancia en frases son ser/estar/parecer y genero/número palabras terminadas en or ("profesor", "conductor",...) <br>
 **nombresfemeninos.csv** <br>
 fichero con el listado de nombres femeninos utilizados para detectar el género (sacado de la web del ine) <br>
 **nombresmasculinos.csv** <br>
