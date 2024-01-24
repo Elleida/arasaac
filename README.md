@@ -26,6 +26,8 @@ mejoras sobre la versión v6. Se solucionan ciertos errores del lematizador, p.e
  se flexiona "yo lo sé" o "yo no saber lo" se flexiona "yo no lo sé" <br>
 **conjugarfrasev7-1.py** <br>
 mejoras sobre la versión v7. Se solucionan problemas de concordancia en frases son ser/estar/parecer y genero/número palabras terminadas en or ("profesor", "conductor",...) <br>
+**conjugarfrasev7-2.py** <br>
+mejoras sobre la versión v7-1. Plural de "un" y concordancias en frases sin verbo. <br>
 **nombresfemeninos.csv** <br>
 fichero con el listado de nombres femeninos utilizados para detectar el género (sacado de la web del ine) <br>
 **nombresmasculinos.csv** <br>
